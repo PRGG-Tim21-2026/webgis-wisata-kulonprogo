@@ -76,9 +76,30 @@
 <body>
     <header>
         <h1>WebGIS Rekomendasi Destinasi dan Rute Wisata</h1>
-        <p>Kapanewon Girimulyo, Kalibawang, dan Samigaluh</p>
-        <button id="btnUbahPreferensi">Ubah Preferensi</button>
-    </header>
+<p>Kapanewon Girimulyo, Kalibawang, dan Samigaluh</p>
+
+<div id="pilihanLokasi">
+    <h3>Tentukan Lokasi Awal Perjalanan</h3>
+
+    <button id="btnLokasiSaya" type="button">
+        Gunakan Lokasi Saat Ini
+    </button>
+
+    <p>atau masukkan lokasi secara manual:</p>
+
+    <input type="text" id="inputLokasi"
+        placeholder="Contoh: Alun-Alun Wates">
+
+    <button id="btnLokasiManual" type="button">
+        Gunakan Lokasi Ini
+    </button>
+</div>
+
+<button id="btnUbahPreferensi" type="button">
+    Ubah Preferensi
+</button>
+
+</header>
 
     <main>
         <div id="map"></div>
