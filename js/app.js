@@ -19,11 +19,7 @@ const wisataLayer = L.geoJSON(window.WISATA, {
         return L.marker(latlng, {
             icon: L.divIcon({
                 className: "marker-wisata",
-                html: `
-                    <div class="pin-wisata">
-                        <span>●</span>
-                    </div>
-                `,
+                html: `<div class="pin-wisata"><span>●</span></div>`,
                 iconSize: [32, 42],
                 iconAnchor: [16, 42],
                 popupAnchor: [0, -40]
@@ -31,43 +27,39 @@ const wisataLayer = L.geoJSON(window.WISATA, {
         });
     },
     onEachFeature: (feature, layer) => {
-    const p = feature.properties;
+        const p = feature.properties;
+        const hari = [
+            ["senin", "Senin"], ["selasa", "Selasa"],
+            ["rabu", "Rabu"], ["kamis", "Kamis"],
+            ["jumat", "Jumat"], ["sabtu", "Sabtu"],
+            ["minggu", "Minggu"]
+        ];
 
-    const hari = [
-        ["senin", "Senin"],
-        ["selasa", "Selasa"],
-        ["rabu", "Rabu"],
-        ["kamis", "Kamis"],
-        ["jumat", "Jumat"],
-        ["sabtu", "Sabtu"],
-        ["minggu", "Minggu"]
-    ];
+        const hariBuka = hari
+            .filter(([key]) => Number(p[key]) === 1)
+            .map(([, nama]) => nama)
+            .join(", ");
 
-    const hariBuka = hari
-        .filter(([key]) => Number(p[key]) === 1)
-        .map(([, nama]) => nama)
-        .join(", ");
+        const jam = Number(p.buka_24jam) === 1
+            ? "24 jam"
+            : `${esc(p.jam_buka || "-")}–${esc(p.jam_tutup || "-")}`;
 
-    const jam = Number(p.buka_24jam) === 1
-        ? "24 jam"
-        : `${esc(p.jam_buka || "-")}–${esc(p.jam_tutup || "-")}`;
+        const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${p.latitude},${p.longitude}`;
 
-    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${p.latitude},${p.longitude}`;
-
-    layer.bindPopup(`
-        <div class="popup-wisata">
-            <b>${esc(p.nama_wisata)}</b>
-            <p>Lokasi: ${esc(p.kapanewon || "-")}</p>
-            <p>Tiket: ${fmtRp(p.harga_masuk_asli_rp)}</p>
-            <p>Rating: ${esc(p.rating || "-")} (${esc(p.jumlah_ulasan || 0)} ulasan)</p>
-            <p>Hari buka: ${hariBuka || "-"}</p>
-            <p>Jam buka: ${jam}</p>
-            <a href="${mapsUrl}" target="_blank" rel="noopener">
-                Lihat lokasi di Google Maps
-            </a>
-        </div>
-    `);
-}
+        layer.bindPopup(`
+            <div class="popup-wisata">
+                <b>${esc(p.nama_wisata)}</b>
+                <p>Lokasi: ${esc(p.kapanewon || "-")}</p>
+                <p>Tiket: ${fmtRp(p.harga_masuk_asli_rp)}</p>
+                <p>Rating: ${esc(p.rating || "-")} (${esc(p.jumlah_ulasan || 0)} ulasan)</p>
+                <p>Hari buka: ${hariBuka || "-"}</p>
+                <p>Jam buka: ${jam}</p>
+                <a href="${mapsUrl}" target="_blank" rel="noopener">
+                    Lihat lokasi di Google Maps
+                </a>
+            </div>
+        `);
+    }
 }).addTo(map);
 
 map.fitBounds(wisataLayer.getBounds());
