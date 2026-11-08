@@ -15,17 +15,59 @@ console.log('Data wisata:', window.WISATA);
 
 // Semua titik wisata (titik kecil, supaya tidak menumpuk dengan penanda rute)
 const wisataLayer = L.geoJSON(window.WISATA, {
-    pointToLayer: (feature, latlng) => L.circleMarker(latlng, {
-        radius: 5, color: '#4b5563', weight: 1, fillColor: '#7aa6d6', fillOpacity: 0.85
-    }),
+    pointToLayer: function (feature, latlng) {
+        return L.marker(latlng, {
+            icon: L.divIcon({
+                className: "marker-wisata",
+                html: `
+                    <div class="pin-wisata">
+                        <span>●</span>
+                    </div>
+                `,
+                iconSize: [32, 42],
+                iconAnchor: [16, 42],
+                popupAnchor: [0, -40]
+            })
+        });
+    },
     onEachFeature: (feature, layer) => {
-        const p = feature.properties;
-        layer.bindPopup(
-            `<b>${esc(p.nama_wisata)}</b>` +
-            (p.kategori ? `<br>${esc(p.kategori)}` : '') +
-            (p.rating ? `<br>Rating: ${esc(p.rating)}` : '')
-        );
-    }
+    const p = feature.properties;
+
+    const hari = [
+        ["senin", "Senin"],
+        ["selasa", "Selasa"],
+        ["rabu", "Rabu"],
+        ["kamis", "Kamis"],
+        ["jumat", "Jumat"],
+        ["sabtu", "Sabtu"],
+        ["minggu", "Minggu"]
+    ];
+
+    const hariBuka = hari
+        .filter(([key]) => Number(p[key]) === 1)
+        .map(([, nama]) => nama)
+        .join(", ");
+
+    const jam = Number(p.buka_24jam) === 1
+        ? "24 jam"
+        : `${esc(p.jam_buka || "-")}–${esc(p.jam_tutup || "-")}`;
+
+    const mapsUrl = `https://www.google.com/maps/search/?api=1&query=${p.latitude},${p.longitude}`;
+
+    layer.bindPopup(`
+        <div class="popup-wisata">
+            <b>${esc(p.nama_wisata)}</b>
+            <p>Lokasi: ${esc(p.kapanewon || "-")}</p>
+            <p>Tiket: ${fmtRp(p.harga_masuk_asli_rp)}</p>
+            <p>Rating: ${esc(p.rating || "-")} (${esc(p.jumlah_ulasan || 0)} ulasan)</p>
+            <p>Hari buka: ${hariBuka || "-"}</p>
+            <p>Jam buka: ${jam}</p>
+            <a href="${mapsUrl}" target="_blank" rel="noopener">
+                Lihat lokasi di Google Maps
+            </a>
+        </div>
+    `);
+}
 }).addTo(map);
 
 map.fitBounds(wisataLayer.getBounds());
@@ -240,10 +282,12 @@ function tampilkanPertanyaan() {
 // LOKASI AWAL: teks / GPS / klik peta
 // ===============================
 function setInfoLokasi(teks, galat = false) {
-    const el = document.getElementById("infoLokasi");
-    if (!el) return;
-    el.textContent = teks;
-    el.classList.toggle("galat", galat);
+    ["infoLokasi", "infoLokasiHeader"].forEach(id => {
+        const el = document.getElementById(id);
+        if (!el) return;
+        el.textContent = teks;
+        el.classList.toggle("galat", galat);
+    });
 }
 
 function tandaiLokasiAwal(lat, lng) {
@@ -278,6 +322,11 @@ function gunakanGps() {
         { enableHighAccuracy: true, timeout: 10000 }
     );
 }
+
+// Tombol lokasi saat ini pada header
+document.getElementById("btnLokasiSaya").addEventListener("click", function () {
+    gunakanGps();
+});
 
 function pilihDiPeta() {
     elPanduan.style.display = "none";

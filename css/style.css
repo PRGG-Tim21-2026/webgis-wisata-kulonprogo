@@ -120,3 +120,27 @@ main {
     border-color: #287a52;
     box-shadow: 0 0 0 2px rgba(40, 122, 82, 0.15);
 }
+
+.marker-wisata {
+    background: none;
+    border: none;
+}
+
+.pin-wisata {
+    width: 30px;
+    height: 30px;
+    background: #e53935;
+    border: 2px solid white;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pin-wisata span {
+    color: white;
+    transform: rotate(45deg);
+    font-size: 13px;
+}

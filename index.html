@@ -74,31 +74,31 @@
     </style>
 </head>
 <body>
-    <header>
-        <h1>WebGIS Rekomendasi Destinasi dan Rute Wisata</h1>
-<p>Kapanewon Girimulyo, Kalibawang, dan Samigaluh</p>
+<header>
+    <h1>WebGIS Rekomendasi Destinasi dan Rute Wisata</h1>
+    <p>Kapanewon Girimulyo, Kalibawang, dan Samigaluh</p>
 
-<div id="pilihanLokasi">
-    <h3>Tentukan Lokasi Awal Perjalanan</h3>
+    <div id="pilihanLokasi">
+        <button id="btnLokasiSaya" type="button">
+            Gunakan Lokasi Saat Ini
+        </button>
 
-    <button id="btnLokasiSaya" type="button">
-        Gunakan Lokasi Saat Ini
+        <div id="lokasiManual" style="display: none;">
+            <input type="text" id="inputLokasi"
+                placeholder="Contoh: Alun-Alun Wates">
+
+            <button id="btnLokasiManual" type="button">
+                Gunakan Lokasi Ini
+            </button>
+
+            <p id="infoLokasiHeader"></p>
+
+        </div>
+    </div>
+
+    <button id="btnUbahPreferensi" type="button">
+        Ubah Preferensi
     </button>
-
-    <p>atau masukkan lokasi secara manual:</p>
-
-    <input type="text" id="inputLokasi"
-        placeholder="Contoh: Alun-Alun Wates">
-
-    <button id="btnLokasiManual" type="button">
-        Gunakan Lokasi Ini
-    </button>
-</div>
-
-<button id="btnUbahPreferensi" type="button">
-    Ubah Preferensi
-</button>
-
 </header>
 
     <main>
