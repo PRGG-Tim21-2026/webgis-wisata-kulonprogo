@@ -1,0 +1,9 @@
+{
+  "sumber": "Penilaian konsensus tim, 8 November 2026",
+  "kriteria": ["C1", "C2", "C3", "C4"],
+  "sifat": ["cost", "cost", "benefit", "benefit"],
+  "bobot": [0.4187, 0.3521, 0.1245, 0.1047],
+  "lambda_maks": 4.1836,
+  "CI": 0.0612,
+  "CR": 0.068
+}
