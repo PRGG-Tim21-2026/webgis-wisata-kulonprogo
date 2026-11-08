@@ -10,11 +10,63 @@ L.tileLayer('https://tile.openstreetmap.de/{z}/{x}/{y}.png', {
 
 // Memastikan data wisata tersedia
 console.log('Data wisata:', window.WISATA);
+// Mengubah angka menjadi format Rupiah
+function formatRupiah(nilai) {
+    if (nilai === null || nilai === undefined || nilai === "") {
+        return "Tidak tersedia";
+    }
+
+    return "Rp" + Number(nilai).toLocaleString("id-ID");
+}
+
+// Mengambil daftar hari operasional
+function getHariBuka(p) {
+    const daftarHari = [
+        ["senin", "Senin"],
+        ["selasa", "Selasa"],
+        ["rabu", "Rabu"],
+        ["kamis", "Kamis"],
+        ["jumat", "Jumat"],
+        ["sabtu", "Sabtu"],
+        ["minggu", "Minggu"]
+    ];
+
+    return daftarHari
+        .filter(([key]) => Number(p[key]) === 1)
+        .map(([, nama]) => nama)
+        .join(", ") || "Tidak tersedia";
+}
+
+// Menampilkan informasi wisata pada marker
 const wisataLayer = L.geoJSON(window.WISATA, {
     onEachFeature: function (feature, layer) {
-        layer.bindPopup(
-            `<b>${feature.properties.nama_wisata}</b>`
-        );
+        const p = feature.properties;
+
+        const jamOperasional = Number(p.buka_24jam) === 1
+            ? "Buka 24 jam"
+            : `${p.jam_buka || "-"} – ${p.jam_tutup || "-"}`;
+
+        const popup = `
+            <div style="min-width:220px; line-height:1.6;">
+                <h3 style="margin:0 0 8px;">
+                    ${p.nama_wisata || "-"}
+                </h3>
+
+                <b>Kategori:</b> ${p.kategori || "-"}<br>
+                <b>Kapanewon:</b> ${p.kapanewon || "-"}<br>
+                <b>Kalurahan:</b> ${p.kalurahan || "-"}<br>
+                <b>Rating:</b> ${p.rating ?? "-"}<br>
+                <b>Jumlah ulasan:</b> ${p.jumlah_ulasan ?? "-"}<br>
+
+                <hr>
+
+                <b>Harga tiket:</b> ${formatRupiah(p.harga_masuk_asli_rp)}<br>
+                <b>Jam operasional:</b> ${jamOperasional}<br>
+                <b>Hari buka:</b> ${getHariBuka(p)}
+            </div>
+        `;
+
+        layer.bindPopup(popup);
     }
 }).addTo(map);
 
@@ -170,4 +222,4 @@ document.getElementById("btnUbahPreferensi").addEventListener("click", function 
     document.getElementById("panduan").style.display = "flex";
 });
 
-tampilkanPertanyaan();
+document.getElementById("panduan").style.display = "none";
