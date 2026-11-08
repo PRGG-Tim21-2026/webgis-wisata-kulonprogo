@@ -373,6 +373,7 @@ document.getElementById("btnUbahPreferensi").addEventListener("click", function 
     nomorPertanyaan = 0;
     tampilkanPertanyaan();
     elPanduan.style.display = "flex";
+});
 
 // ===============================
 // REKOMENDASI (SAW)
@@ -508,4 +509,4 @@ document.getElementById("btnTutupHasil").addEventListener("click", () => {
     document.getElementById("hasil").style.display = "none";
 });
 
-tampilkanPertanyaan();
+elPanduan.style.display = "none";
